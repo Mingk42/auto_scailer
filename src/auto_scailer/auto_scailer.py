@@ -5,6 +5,8 @@ from tz_kst import now
 
 conti_high=0
 conti_low=0
+logging_time = now("%Y%m%d-%H%M%S")
+
 
 def auto_scailer():
     global conti_high
@@ -21,7 +23,7 @@ def auto_scailer():
 
         usage_log_path=f"{get_log_path()}"
         os.makedirs(usage_log_path, exist_ok=True)
-        with open(f"{usage_log_path}/usage.log", "a") as f:
+        with open(f"{usage_log_path}/usage_{logging_time}.log", "a") as f:
             data = {"cpu_usage(%)":cu, "time":nowTime, "scale_cnt":scale_cnt, "cpu_use_status": "high" if cu >scale_out_value else "low" if cu <scale_in_value else "stable"}
             f.write(str(data))
             f.write("\n")
