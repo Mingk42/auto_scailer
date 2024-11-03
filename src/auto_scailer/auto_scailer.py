@@ -27,7 +27,7 @@ def make_log_file():
         f.write("cpu_usage(%),time,scale_cnt,cpu_use_status\n")
 
     with open(f"{scale_log_path}/{log_time}.log", "w") as f:
-        f.write("method,scale_cnt_before,scale_cnt_after,cpu_usage(%)\n")
+        f.write("method,time,scale_cnt_before,scale_cnt_after,cpu_usage(%)\n")
 
 
 def usage_log(cpu_usage, time, scale_cnt, status):
@@ -39,13 +39,13 @@ def usage_log(cpu_usage, time, scale_cnt, status):
         f.write(f"{cpu_usage},{time},{scale_cnt},{status}\n")
         #f.write("\n")
 
-def scale_log(method,scale_cnt_before,scale_cnt_after,cpu_usage):
+def scale_log(method,time,scale_cnt_before,scale_cnt_after,cpu_usage):
     scale_log_path=f"{get_log_path()}/scale"
 
     with open(f"{scale_log_path}/{log_time}.log", "a") as f:
         #data = {"method":f"scale {method}","scale_cnt_before":scale_cnt_before, "scale_cnt_after":scale_cnt_after, "cpu_usage(%)":cpu_usage }
         #f.write(str(data))
-        f.write(f"scale {method},{scale_cnt_before},{scale_cnt_after},{cpu_usage}\n")
+        f.write(f"scale {method},{time},{scale_cnt_before},{scale_cnt_after},{cpu_usage}\n")
         #f.write("\n")
 
 def do_scale(method, scale_cnt):
@@ -78,7 +78,7 @@ def auto_scailer():
                 conti_high=0
 
             if conti_high==60:
-                scale_log("out",scale_cnt,scale_cnt+1,cu)
+                scale_log("out",nowTime,scale_cnt,scale_cnt+1,cu)
                 do_scale("out", scale_cnt+1)
                 # print(f"[INFO] container의 수를 {scale_cnt+1}로 scale out 합니다.")
                 # os.system(f"docker compose -f {get_compose_file_path()} up -d --scale blog={scale_cnt+1}")
@@ -94,7 +94,7 @@ def auto_scailer():
                     conti_low=0
 
                 if conti_low==60:
-                        scale_log("in",scale_cnt,scale_cnt-1,cu)
+                        scale_log("in",nowTime,scale_cnt,scale_cnt-1,cu)
                         do_scale("in", scale_cnt-1)
 
                         conti_low=0

@@ -7,7 +7,7 @@ $ scailer-start   # auto scaler를 시작합니다.
 $ get-log-path    # log file이 저장된 경로를 반환합니다.
 $ usage-plot      # usage-time line plot을 출력합니다.
 $ status-plot     # status-times bar plot을 출력합니다.
-$ scale-plot=     # scale in/out-times bar plot을 출력합니다.
+$ scale-plot      # scale in/out-times bar plot을 출력합니다.
 ```
 
 ### Dependency
