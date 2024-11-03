@@ -16,21 +16,37 @@ def display_stat(cpu_use=0, scale_cnt=1, status="stable", conti_time=0, time=0):
 
     print(f"마지막 확인시간 : {time}")
 
+def make_log_file():
+    usage_log_path=f"{get_log_path()}/usage"
+    scale_log_path=f"{get_log_path()}/scale"
+
+    os.makedirs(usage_log_path, exist_ok=True)
+    os.makedirs(scale_log_path, exist_ok=True)
+
+    with open(f"{usage_log_path}/{log_time}.log", "w") as f:
+        f.write("cpu_usage(%),time,scale_cnt,cpu_use_status\n")
+
+    with open(f"{scale_log_path}/{log_time}.log", "w") as f:
+        f.write("method,scale_cnt_before,scale_cnt_after,cpu_usage(%)\n")
+
+
 def usage_log(cpu_usage, time, scale_cnt, status):
     usage_log_path=f"{get_log_path()}/usage"
-    os.makedirs(usage_log_path, exist_ok=True)
+
     with open(f"{usage_log_path}/{log_time}.log", "a") as f:
-        data = {"cpu_usage(%)":cpu_usage, "time":time, "scale_cnt":scale_cnt, "cpu_use_status": status}
-        f.write(str(data))
-        f.write("\n")
+        #data = {"cpu_usage(%)":cpu_usage, "time":str(time), "scale_cnt":scale_cnt, "cpu_use_status": status}
+        #f.write(str(data))
+        f.write(f"{cpu_usage},{time},{scale_cnt},{status}\n")
+        #f.write("\n")
 
 def scale_log(method,scale_cnt_before,scale_cnt_after,cpu_usage):
     scale_log_path=f"{get_log_path()}/scale"
-    os.makedirs(scale_log_path, exist_ok=True)
+
     with open(f"{scale_log_path}/{log_time}.log", "a") as f:
-        data = {"method":f"scale {method}","scale_cnt_before":scale_cnt_before, "scale_cnt_after":scale_cnt_after, "cpu_usage(%)":cpu_usage }
-        f.write(str(data))
-        f.write("\n")
+        #data = {"method":f"scale {method}","scale_cnt_before":scale_cnt_before, "scale_cnt_after":scale_cnt_after, "cpu_usage(%)":cpu_usage }
+        #f.write(str(data))
+        f.write(f"scale {method},{scale_cnt_before},{scale_cnt_after},{cpu_usage}\n")
+        #f.write("\n")
 
 def do_scale(method, scale_cnt):
     print(f"[INFO] container의 수를 {scale_cnt}로 scale {method} 합니다.", end="\n\n")
@@ -46,6 +62,8 @@ def auto_scailer():
     cu, scale_cnt =get_cpu_use()
 
     chk_time=time.time()
+
+    make_log_file()
 
     while scale_cnt:
         if (chk_time+10)//10==time.time()//10:
@@ -96,4 +114,4 @@ def auto_scailer():
             usage_log(cu, nowTime, scale_cnt, status)
 
             cu, scale_cnt =get_cpu_use()
-        print(f"다음 체크까지 {(10-time.time()+chk_time)%10:.0f}초", end="\r", flush=True)
+        print(f"잠시 후 통계정보가 갱신됩니다.({(10-time.time()+chk_time)%10:.0f}) ", end="\r", flush=True)
