@@ -1,6 +1,6 @@
 import pandas as pd
 import plotext as plx
-from auto_scailer.utils import get_log_path
+from auto_scaler.utils import get_log_path
 from glob import glob
 
 def usage_plot():

@@ -2,6 +2,9 @@ import subprocess
 import json
 import os
 import requests as reqs
+from glob import glob
+import pandas as pd
+
 
 line_status={
     200: "Success",
@@ -77,3 +80,15 @@ def get_compose_file_path():
     rst=eval(rst)
 
     return rst[-1]["ConfigFiles"] if len(rst)!=0 else None
+
+
+
+
+def read_log():
+    usage_log_file_list=glob(f"{get_log_path()}/usage/*.log")
+    usage_log_file_list.sort()
+    usage_log_file=usage_log_file_list[-1]
+
+    df = pd.read_csv(usage_log_file)
+
+    return df

@@ -6,6 +6,10 @@ from tz_kst import now
 log_time=now("%Y%m%d-%H%M%S")
 scale_in_value, scale_out_value=map(float,get_limit())
 
+###### 3.0.0
+status=""
+conti_time=0
+######
 
 def display_stat(cpu_use=0, scale_cnt=1, status="stable", conti_time=0, time=0):
     print("+"+"-"*87+"+")
@@ -33,6 +37,7 @@ def make_log_file():
 def usage_log(cpu_usage, time, scale_cnt, status):
     usage_log_path=f"{get_log_path()}/usage"
 
+    time=log_time if time==None else time
     with open(f"{usage_log_path}/{log_time}.log", "a") as f:
         #data = {"cpu_usage(%)":cpu_usage, "time":str(time), "scale_cnt":scale_cnt, "cpu_use_status": status}
         #f.write(str(data))
@@ -42,6 +47,7 @@ def usage_log(cpu_usage, time, scale_cnt, status):
 def scale_log(method,time,scale_cnt_before,scale_cnt_after,cpu_usage):
     scale_log_path=f"{get_log_path()}/scale"
 
+    time=log_time if time==None else time
     with open(f"{scale_log_path}/{log_time}.log", "a") as f:
         #data = {"method":f"scale {method}","scale_cnt_before":scale_cnt_before, "scale_cnt_after":scale_cnt_after, "cpu_usage(%)":cpu_usage }
         #f.write(str(data))
@@ -56,6 +62,9 @@ def do_scale(method, scale_cnt):
 
 
 def auto_scailer():
+    global status
+    global conti_time
+
     conti_high=0
     conti_low=0
 
